@@ -18,12 +18,14 @@ const handleSearch = async () => {
     // Wake backend (correct endpoint)
     await fetch("https://weather-app-38bh.onrender.com/health");
 
+
     // Fetch weather
-    const response = await fetch(
-      `https://weather-app-38bh.onrender.com/weather?city=${encodeURIComponent(
-        city
-      )}`
-    );
+   const response = await fetch(
+  `https://weather-app-38bh.onrender.com/weather?city=${encodeURIComponent(
+    city
+  )}`
+);
+
 
     if (!response.ok) {
       throw new Error("City not found or server error.");
