@@ -19,9 +19,8 @@ export default function App() {
       await fetch("https://weather-app-38bh.onrender.com/healthz");
 
       // Step 2: Fetch actual weather data
-      const response = await fetch(
-        `https://weather-app-38bh.onrender.com/weather?city=${encodeURIComponent(city)}`
-      );
+      const response = await fetch(`https://weather-app-38bh.onrender.com/weather?city=${encodeURIComponent(city)}`);
+
 
       if (!response.ok) {
         throw new Error("City not found or server error.");
