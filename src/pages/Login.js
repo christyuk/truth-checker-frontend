@@ -1,21 +1,20 @@
-import React, { useState } from "react";
-import API from "../api";
+import { useState } from "react";
+import { loginUser } from "../api";
 
-function Login() {
+function Login({ onLogin }) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
   const handleLogin = async () => {
-    try {
-      const res = await API.post("/auth/login", {
-        username,
-        password,
-      });
+    setError("");
 
-      localStorage.setItem("token", res.data.token);
-      alert("Login successful ✅");
-      setError("");
+    try {
+      const res = await loginUser(username, password);
+
+      if (res.data.success) {
+        onLogin(res.data.user);
+      }
     } catch (err) {
       setError("Login failed");
     }
@@ -23,7 +22,7 @@ function Login() {
 
   return (
     <div>
-      <h2>Login</h2>
+      <h1>Login</h1>
 
       <input
         placeholder="Username"
