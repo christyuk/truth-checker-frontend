@@ -1,31 +1,30 @@
 import { useState } from "react";
-import api from "../api";
+import API from "../api";
+import { useNavigate } from "react-router-dom";
 
-function Login({ onLogin }) {
+function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const navigate = useNavigate();
 
   const handleLogin = async () => {
     try {
-      const res = await api.post("/login", {
+      const res = await API.post("/login", {
         username,
         password,
       });
 
-      if (res.data.success) {
-        onLogin();
-      } else {
-        setError("Invalid credentials");
-      }
+      localStorage.setItem("token", res.data.token);
+      navigate("/truth");
     } catch (err) {
-      setError("Server error");
+      setError("Login failed");
     }
   };
 
   return (
     <div>
-      <h2>Login</h2>
+      <h1>Login</h1>
 
       <input
         placeholder="Username"
@@ -33,12 +32,16 @@ function Login({ onLogin }) {
         onChange={(e) => setUsername(e.target.value)}
       />
 
+      <br />
+
       <input
         type="password"
         placeholder="Password"
         value={password}
         onChange={(e) => setPassword(e.target.value)}
       />
+
+      <br />
 
       <button onClick={handleLogin}>Login</button>
 
