@@ -1,23 +1,10 @@
-const API_BASE_URL =
-  process.env.REACT_APP_API_URL || "http://localhost:3000";
+import axios from "axios";
 
-export async function loginUser(username, password) {
-  const res = await fetch(`${API_BASE_URL}/auth/login`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ username, password }),
-  });
-  return res.json();
-}
+const API = axios.create({
+  baseURL: "https://truth-checker-backend.onrender.com",
+  headers: {
+    "Content-Type": "application/json",
+  },
+});
 
-export async function truthCheck(text, token) {
-  const res = await fetch(`${API_BASE_URL}/truth/check`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-    body: JSON.stringify({ text }),
-  });
-  return res.json();
-}
+export default API;
