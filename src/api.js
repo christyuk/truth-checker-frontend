@@ -1,13 +1,9 @@
-// src/api.js
-
-const API_BASE = process.env.REACT_APP_API_URL;
+const API_URL = process.env.REACT_APP_API_URL;
 
 export async function loginUser(username, password) {
-  const res = await fetch(`${API_BASE}/api/auth/login`, {
+  const res = await fetch(`${API_URL}/api/auth/login`, {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ username, password }),
   });
 
@@ -19,11 +15,9 @@ export async function loginUser(username, password) {
 }
 
 export async function checkTruth(text) {
-  const res = await fetch(`${API_BASE}/api/truth/check`, {
+  const res = await fetch(`${API_URL}/api/truth/check`, {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ text }),
   });
 

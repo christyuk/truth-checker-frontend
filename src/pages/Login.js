@@ -8,7 +8,7 @@ function Login() {
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
-  const handleLogin = async () => {
+  const login = async () => {
     try {
       await loginUser(username, password);
       localStorage.setItem("loggedIn", "true");
@@ -27,7 +27,6 @@ function Login() {
         value={username}
         onChange={(e) => setUsername(e.target.value)}
       />
-
       <br />
 
       <input
@@ -36,10 +35,9 @@ function Login() {
         value={password}
         onChange={(e) => setPassword(e.target.value)}
       />
-
       <br />
 
-      <button onClick={handleLogin}>Login</button>
+      <button onClick={login}>Login</button>
 
       {error && <p style={{ color: "red" }}>{error}</p>}
     </div>
