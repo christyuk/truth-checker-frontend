@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { loginUser } from "../api";
 
 function Login() {
   const [username, setUsername] = useState("");
@@ -9,11 +8,24 @@ function Login() {
 
   const login = async () => {
     try {
-      await loginUser(username, password);
+      const res = await fetch(
+        `${process.env.REACT_APP_API_URL}/api/auth/login`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ username, password })
+        }
+      );
+
+      if (!res.ok) {
+        alert("Login failed");
+        return;
+      }
+
       localStorage.setItem("loggedIn", "true");
       navigate("/check");
     } catch {
-      alert("Login failed");
+      alert("Server error");
     }
   };
 
@@ -26,7 +38,6 @@ function Login() {
         value={username}
         onChange={(e) => setUsername(e.target.value)}
       />
-
       <br />
 
       <input
@@ -35,8 +46,7 @@ function Login() {
         value={password}
         onChange={(e) => setPassword(e.target.value)}
       />
-
-      <br /><br />
+      <br />
 
       <button onClick={login}>Login</button>
     </div>
