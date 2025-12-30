@@ -1,92 +1,9 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <title>Truth Checker</title>
-</head>
-<body>
-
-  <h2>Register</h2>
-  <input id="regUsername" placeholder="Username"><br><br>
-  <input id="regPassword" type="password" placeholder="Password"><br><br>
-  <button onclick="register()">Register</button>
-
-  <hr>
-
-  <h2>Login</h2>
-  <input id="loginUsername" placeholder="Username"><br><br>
-  <input id="loginPassword" type="password" placeholder="Password"><br><br>
-  <button onclick="login()">Login</button>
-
-  <hr>
-
-  <h2>Truth Check</h2>
-  <input id="claimText" placeholder="Enter claim"><br><br>
-  <button onclick="checkTruth()">Check Truth</button>
-
-  <pre id="result"></pre>
-
-  <script>
-    const API = "http://localhost:5000/api";
-
-    async function register() {
-      const username = document.getElementById("regUsername").value;
-      const password = document.getElementById("regPassword").value;
-
-      const res = await fetch(API + "/auth/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, password })
-      });
-
-      const data = await res.json();
-      alert(data.message);
-    }
-
-    async function login() {
-      const username = document.getElementById("loginUsername").value;
-      const password = document.getElementById("loginPassword").value;
-
-      const res = await fetch(API + "/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, password })
-      });
-
-      const data = await res.json();
-
-      if (res.ok) {
-        localStorage.setItem("token", data.token);
-        alert("Login successful");
-      } else {
-        alert("Login failed");
-      }
-    }
-
-    async function checkTruth() {
-      const text = document.getElementById("claimText").value;
-      const token = localStorage.getItem("token");
-
-      if (!token) {
-        alert("Please login first");
-        return;
-      }
-
-      const res = await fetch(API + "/truth/check", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": "Bearer " + token
-        },
-        body: JSON.stringify({ text })
-      });
-
-      const data = await res.json();
-      document.getElementById("result").innerText =
-        "Verdict: " + data.verdict +
-        "\nConfidence: " + data.confidence +
-        "\nExplanation: " + data.explanation;
-    }
-  </script>
-
-</body>
+  <head>
+    <title>Truth Checker</title>
+  </head>
+  <body>
+    <div id="root"></div>
+  </body>
 </html>

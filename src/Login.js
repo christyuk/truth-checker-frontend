@@ -1,48 +1,24 @@
-import React, { useState } from "react";
+import { useState } from "react";
+import { login } from "./api";
 
-function Login() {
+export default function Login({ onLogin }) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
-  const login = async () => {
-    const res = await fetch("http://localhost:5000/api/auth/login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ username, password }),
-    });
-
-    const data = await res.json();
-
-    if (data.token) {
-      localStorage.setItem("token", data.token);
-      alert("Login successful");
-    } else {
-      alert("Login failed");
-    }
+  const submit = async () => {
+    const res = await login(username, password);
+    if (res.success) onLogin(res.token);
+    else alert("Login failed");
   };
 
   return (
     <div>
       <h2>Login</h2>
-
-      <input
-        placeholder="Username"
-        value={username}
-        onChange={(e) => setUsername(e.target.value)}
-      />
+      <input placeholder="Username" onChange={e => setUsername(e.target.value)} />
       <br />
-
-      <input
-        type="password"
-        placeholder="Password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-      />
+      <input type="password" placeholder="Password" onChange={e => setPassword(e.target.value)} />
       <br />
-
-      <button onClick={login}>Login</button>
+      <button onClick={submit}>Login</button>
     </div>
   );
 }
-
-export default Login;

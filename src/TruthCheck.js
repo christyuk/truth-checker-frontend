@@ -1,55 +1,28 @@
-import React, { useState } from "react";
+import { useState } from "react";
+import { truthCheck } from "./api";
 
-function TruthCheck() {
+export default function TruthCheck() {
   const [text, setText] = useState("");
-  const [result, setResult] = useState(null);
+  const [res, setRes] = useState(null);
 
-  const checkTruth = async () => {
-    const token = localStorage.getItem("token");
-    console.log("TOKEN:", token);
-
-    if (!token) {
-      alert("Please login first");
-      return;
-    }
-
-    const res = await fetch("http://localhost:5000/api/truth/check", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify({ text }),
-    });
-
-    const data = await res.json();
-    console.log("API RESPONSE:", data);
-
-    setResult(data);
+  const check = async () => {
+    const r = await truthCheck(text);
+    setRes(r);
   };
 
   return (
     <div>
-      <h2>Truth Check</h2>
+      <h2>Truth Checker</h2>
+      <input placeholder="Enter text" onChange={e => setText(e.target.value)} />
+      <button onClick={check}>Check</button>
 
-      <input
-        value={text}
-        onChange={(e) => setText(e.target.value)}
-        placeholder="Enter claim"
-      />
-      <br />
-
-      <button onClick={checkTruth}>Check</button>
-
-      {result && (
+      {res && (
         <div>
-          <p><b>Verdict:</b> {result.verdict}</p>
-          <p><b>Confidence:</b> {result.confidence}</p>
-          <p><b>Explanation:</b> {result.explanation}</p>
+          <p>Verdict: {res.verdict ? "True" : "False"}</p>
+          <p>Confidence: {res.confidence}</p>
+          <p>{res.explanation}</p>
         </div>
       )}
     </div>
   );
 }
-
-export default TruthCheck;
