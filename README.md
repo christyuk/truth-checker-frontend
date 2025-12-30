@@ -1,39 +1,21 @@
-# AI Truth Checker – Full Stack Project
+# Truth Checker Backend
 
-## Live URLs
-- Backend: https://truth-checker-backend.onrender.com
-- Frontend: (add your frontend URL here)
+Live API:
+https://truth-checker-backend.onrender.com
 
-## Project Description
-AI Truth Checker is a full-stack web application that verifies factual statements.
-Users submit a text claim and receive a truth verdict with confidence and explanation.
+Health Check:
+GET /health
 
-## Features
-- REST API built with Node.js and Express
-- Health check endpoint for monitoring
-- Truth verification API endpoint
-- Secure environment variable handling
-- Deployed backend on Render
-- Frontend integrated with live backend API
+Truth Check API:
+POST /api/truth/check
 
-## Backend Endpoints
-- GET / → Server status
-- GET /health → Health check
-- POST /api/truth/check → Truth verification
+Sample Request:
+{
+  "text": "The earth is round"
+}
 
-## Tech Stack
-- Frontend: React
-- Backend: Node.js, Express
-- Deployment: Render (Backend), Vercel (Frontend)
-- Tools: Git, GitHub, REST APIs
-
-## How to Run Locally
-1. Clone the repository
-2. Install dependencies:
-   npm install
-3. Start server:
-   npm start
-4. Server runs on port 5000
-
-## Author
-Christy
+Tech Stack:
+- Node.js
+- Express
+- REST API
+- Render Deployment
