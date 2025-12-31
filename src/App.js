@@ -1,10 +1,9 @@
-import { useState } from "react";
+import React from "react";
 import Login from "./Login";
-import TruthCheck from "./TruthCheck";
+
 
 function App() {
-  const [token, setToken] = useState(null);
-  return token ? <TruthCheck /> : <Login onLogin={setToken} />;
+  return <Login />;
 }
 
 export default App;

@@ -1,19 +1,10 @@
-const API = "https://truth-checker-backend.onrender.com";
+import axios from "axios";
 
-export const login = async (username, password) => {
-  const res = await fetch(`${API}/api/auth/login`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ username, password }),
-  });
-  return res.json();
-};
+const api = axios.create({
+  baseURL: process.env.REACT_APP_API_URL,
+  headers: {
+    "Content-Type": "application/json",
+  },
+});
 
-export const truthCheck = async (text) => {
-  const res = await fetch(`${API}/api/truth/check`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ text }),
-  });
-  return res.json();
-};
+export default api;
