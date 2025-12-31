@@ -3,25 +3,36 @@ body {
   background: #f4f6f8;
 }
 
-input {
-  padding: 8px;
-  margin: 6px 0;
-  width: 250px;
+.container {
+  max-width: 600px;
+  margin: 80px auto;
+  padding: 30px;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+textarea, input {
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
 }
 
 button {
-  padding: 8px 16px;
-  background: #007bff;
+  padding: 10px 20px;
+  background: #0070f3;
   color: white;
   border: none;
   cursor: pointer;
 }
 
-button:hover {
-  background: #0056b3;
+.true {
+  color: green;
+  font-weight: bold;
 }
 
-h1 {
-  color: #333;
+.false {
+  color: red;
+  font-weight: bold;
 }
 

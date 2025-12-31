@@ -1,54 +1,45 @@
 import React, { useState } from "react";
-import api from "../api";
+import API from "./api";
 
-function Login() {
+export default function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [message, setMessage] = useState("");
+  const [msg, setMsg] = useState("");
 
-  const handleLogin = async (e) => {
-    e.preventDefault();
-
+  const handleLogin = async () => {
     try {
-      const res = await api.post("/login", {
+      const res = await API.post("/login", {
         username,
-        password,
+        password
       });
 
-      if (res.data.success) {
-        setMessage("Login successful ✅");
-      }
-    } catch (err) {
-      setMessage("Invalid username or password ❌");
+      localStorage.setItem("token", res.data.token);
+      window.location.href = "/check";
+    } catch {
+      setMsg("Login failed");
     }
   };
 
   return (
-    <div style={{ padding: "40px" }}>
-      <h2>Login</h2>
+    <div>
+      <h1>Login</h1>
 
-      <form onSubmit={handleLogin}>
-        <input
-          placeholder="Username"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-        />
-        <br /><br />
+      <input
+        placeholder="Username"
+        onChange={(e) => setUsername(e.target.value)}
+      />
+      <br />
 
-        <input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
-        <br /><br />
+      <input
+        type="password"
+        placeholder="Password"
+        onChange={(e) => setPassword(e.target.value)}
+      />
+      <br />
 
-        <button type="submit">Login</button>
-      </form>
+      <button onClick={handleLogin}>Login</button>
 
-      <p>{message}</p>
+      <p>{msg}</p>
     </div>
   );
 }
-
-export default Login;
