@@ -1,22 +1,32 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import API from "./api";
 
-export default function Login() {
+function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [msg, setMsg] = useState("");
+  const [error, setError] = useState("");
+  const navigate = useNavigate();
 
-  const handleLogin = async () => {
+  const handleLogin = async (e) => {
+    e.preventDefault(); // 🔴 VERY IMPORTANT
+
+    setError("");
+
     try {
       const res = await API.post("/login", {
         username,
-        password
+        password,
       });
 
-      localStorage.setItem("token", res.data.token);
-      window.location.href = "/check";
-    } catch {
-      setMsg("Login failed");
+      if (res.data.success) {
+        localStorage.setItem("token", res.data.token);
+        navigate("/check"); // 🔴 REDIRECT
+      } else {
+        setError("Login failed");
+      }
+    } catch (err) {
+      setError("Login failed");
     }
   };
 
@@ -24,22 +34,27 @@ export default function Login() {
     <div>
       <h1>Login</h1>
 
-      <input
-        placeholder="Username"
-        onChange={(e) => setUsername(e.target.value)}
-      />
-      <br />
+      <form onSubmit={handleLogin}>
+        <input
+          type="text"
+          placeholder="Username"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+        />
+        <br />
+        <input
+          type="password"
+          placeholder="Password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
+        <br />
+        <button type="submit">Login</button>
+      </form>
 
-      <input
-        type="password"
-        placeholder="Password"
-        onChange={(e) => setPassword(e.target.value)}
-      />
-      <br />
-
-      <button onClick={handleLogin}>Login</button>
-
-      <p>{msg}</p>
+      {error && <p style={{ color: "red" }}>{error}</p>}
     </div>
   );
 }
+
+export default Login;
