@@ -1,27 +1,8 @@
-import { HashRouter, Routes, Route, Navigate } from "react-router-dom";
-import Login from "./Login";
-import TruthCheck from "./TruthCheck";
-import ProtectedRoute from "./ProtectedRoute";
+import React from "react";
+import TruthCheck from "./pages/TruthCheck";
 
 function App() {
-  return (
-    <HashRouter>
-      <Routes>
-        <Route path="/" element={<Login />} />
-
-        <Route
-          path="/check"
-          element={
-            <ProtectedRoute>
-              <TruthCheck />
-            </ProtectedRoute>
-          }
-        />
-
-        <Route path="*" element={<Navigate to="/" />} />
-      </Routes>
-    </HashRouter>
-  );
+  return <TruthCheck />;
 }
 
 export default App;

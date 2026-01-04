@@ -1,32 +1,54 @@
-import { useState } from "react";
-import { checkClaim } from "./api";
+import React, { useState } from "react";
+import API from "../api";
 
 function TruthCheck() {
   const [claim, setClaim] = useState("");
-  const [result, setResult] = useState(null);
+  const [result, setResult] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const handleCheck = async () => {
+  const checkTruth = async () => {
+    if (!claim.trim()) {
+      alert("Please enter a claim");
+      return;
+    }
+
     try {
-      const data = await checkClaim(claim);
-      setResult(data);
-    } catch (e) {
-      setResult({ error: "Error connecting to backend" });
+      setLoading(true);
+      const res = await API.post("/check", { claim });
+      setResult(res.data.result || res.data.message);
+    } catch (err) {
+      console.error(err);
+      alert("Backend is waking up. Please try again in 30 seconds.");
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div style={{ padding: "30px" }}>
-      <h2>AI Truth Checker</h2>
+    <div style={{ padding: "40px" }}>
+      <h1>Truth Checker</h1>
 
-      <input
+      <textarea
+        rows="4"
+        cols="50"
         value={claim}
         onChange={(e) => setClaim(e.target.value)}
         placeholder="Enter a claim"
       />
 
-      <button onClick={handleCheck}>Check</button>
+      <br /><br />
 
-      {result && <pre>{JSON.stringify(result, null, 2)}</pre>}
+      <button onClick={checkTruth}>
+        {loading ? "Checking..." : "Check"}
+      </button>
+
+      {result && (
+        <>
+          <br /><br />
+          <strong>Result:</strong>
+          <p>{result}</p>
+        </>
+      )}
     </div>
   );
 }
