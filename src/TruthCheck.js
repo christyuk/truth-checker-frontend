@@ -1,62 +1,34 @@
 import { useState } from "react";
+import { checkTruth } from "./api";
 
 export default function TruthCheck() {
-  const [text, setText] = useState("");
+  const [claim, setClaim] = useState("");
   const [result, setResult] = useState(null);
-  const [loading, setLoading] = useState(false);
 
-  const checkTruth = async () => {
-    if (!text.trim()) {
-      alert("Please enter a claim");
-      return;
-    }
-
-    setLoading(true);
-    setResult(null);
-
+  async function handleCheck() {
     try {
-      const response = await fetch(
-        "https://truth-checker-backend.onrender.com/api/truth/check",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({ text })
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error("Backend error");
-      }
-
-      const data = await response.json();
+      const data = await checkTruth(claim);
       setResult(data);
-    } catch (error) {
+    } catch (err) {
       alert("Backend not ready. Please try again.");
-    } finally {
-      setLoading(false);
     }
-  };
+  }
 
   return (
     <div>
       <h1>AI Truth Checker</h1>
 
       <input
-        type="text"
+        value={claim}
+        onChange={(e) => setClaim(e.target.value)}
         placeholder="Enter claim"
-        value={text}
-        onChange={(e) => setText(e.target.value)}
       />
 
-      <button onClick={checkTruth} disabled={loading}>
-        {loading ? "Checking..." : "Check"}
-      </button>
+      <button onClick={handleCheck}>Check</button>
 
       {result && (
-        <div>
-          <h2>{result.verdict}</h2>
+        <div style={{ marginTop: "20px" }}>
+          <h3>{result.verdict}</h3>
           <p>{result.explanation}</p>
         </div>
       )}

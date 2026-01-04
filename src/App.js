@@ -1,5 +1,7 @@
 import TruthCheck from "./TruthCheck";
 
-export default function App() {
+function App() {
   return <TruthCheck />;
 }
+
+export default App;
