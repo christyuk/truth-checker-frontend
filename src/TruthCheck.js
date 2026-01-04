@@ -6,7 +6,7 @@ function TruthCheck() {
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  // Wake backend
+  // Wake backend on page load
   useEffect(() => {
     fetch("https://truth-checker-backend.onrender.com/health")
       .catch(() => {});
@@ -20,9 +20,7 @@ function TruthCheck() {
       const data = await checkClaim(claim);
       setResult(data);
     } catch (err) {
-      setResult({
-        error: "Backend is running. Please wait 10–20 seconds and retry."
-      });
+      setResult({ error: err.message });
     }
 
     setLoading(false);

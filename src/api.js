@@ -9,10 +9,11 @@ export async function checkClaim(claim) {
     body: JSON.stringify({ claim })
   });
 
+  const data = await response.json();
+
   if (!response.ok) {
-    const text = await response.text();
-    throw new Error(text || "Request failed");
+    throw new Error(data.error || "Request failed");
   }
 
-  return response.json();
+  return data;
 }
