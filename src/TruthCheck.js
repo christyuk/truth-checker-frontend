@@ -1,35 +1,48 @@
-import { useState } from "react";
-import { checkTruth } from "./api";
+import React, { useState } from "react";
+import API from "./api";
 
-export default function TruthCheck() {
+function TruthCheck() {
   const [claim, setClaim] = useState("");
   const [result, setResult] = useState(null);
 
-  async function handleCheck() {
+  const handleCheck = async () => {
     try {
-      const data = await checkTruth(claim);
-      setResult(data);
-    } catch {
-      alert("Unauthorized");
+      const res = await API.post(
+        "/api/truth/check",
+        { text: claim },
+        {
+          headers: {
+            "x-demo": "true", // ✅ DEMO MODE
+          },
+        }
+      );
+
+      setResult(res.data);
+    } catch (err) {
+      alert("Backend not ready. Please try again.");
     }
-  }
+  };
 
   return (
     <div>
       <h1>AI Truth Checker</h1>
+
       <input
-        placeholder="Enter claim"
         value={claim}
-        onChange={e => setClaim(e.target.value)}
+        onChange={(e) => setClaim(e.target.value)}
+        placeholder="Enter claim"
       />
+
       <button onClick={handleCheck}>Check</button>
 
       {result && (
         <div>
-          <p><b>{result.verdict}</b></p>
+          <h3>{result.verdict}</h3>
           <p>{result.explanation}</p>
         </div>
       )}
     </div>
   );
 }
+
+export default TruthCheck;
