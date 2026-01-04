@@ -6,7 +6,7 @@ function TruthCheck() {
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  // Wake backend on page load
+  // Wake backend
   useEffect(() => {
     fetch("https://truth-checker-backend.onrender.com/health")
       .catch(() => {});

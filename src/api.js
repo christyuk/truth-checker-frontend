@@ -9,7 +9,16 @@ export async function checkClaim(claim) {
     body: JSON.stringify({ claim })
   });
 
-  const data = await response.json();
+  const text = await response.text();
+
+  // If backend accidentally returns HTML
+  if (text.startsWith("<")) {
+    throw new Error(
+      "Frontend received HTML instead of JSON. API URL is incorrect."
+    );
+  }
+
+  const data = JSON.parse(text);
 
   if (!response.ok) {
     throw new Error(data.error || "Request failed");
