@@ -1,63 +1,33 @@
-import React, { useState } from "react";
-import API from "./api";
+import { useState } from "react";
+import { checkTruth } from "./api";
 
 export default function TruthCheck() {
-  const [text, setText] = useState("");
+  const [claim, setClaim] = useState("");
   const [result, setResult] = useState(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
 
-  const checkTruth = async () => {
-    if (!text.trim()) {
-      setError("Please enter a statement");
-      return;
-    }
-
-    setError("");
-    setLoading(true);
-    setResult(null);
-
+  async function handleCheck() {
     try {
-      const res = await API.post("/check", { text });
-      setResult(res.data);
-    } catch (err) {
-      setError("Server not reachable. Please try again.");
-    } finally {
-      setLoading(false);
+      const data = await checkTruth(claim);
+      setResult(data);
+    } catch {
+      alert("Unauthorized");
     }
-  };
+  }
 
   return (
-    <div className="container">
-      <h1>Truth Checker</h1>
-
-      <textarea
-        rows="4"
-        placeholder="Enter a statement (e.g. Earth is round)"
-        value={text}
-        onChange={(e) => setText(e.target.value)}
+    <div>
+      <h1>AI Truth Checker</h1>
+      <input
+        placeholder="Enter claim"
+        value={claim}
+        onChange={e => setClaim(e.target.value)}
       />
-
-      <button onClick={checkTruth} disabled={loading}>
-        {loading ? "Checking..." : "Check"}
-      </button>
-
-      {error && <p style={{ color: "red" }}>{error}</p>}
+      <button onClick={handleCheck}>Check</button>
 
       {result && (
         <div>
-          <h3
-            className={
-              result.verdict === "TRUE"
-                ? "true"
-                : result.verdict === "FALSE"
-                ? "false"
-                : ""
-            }
-          >
-            Result: {result.verdict}
-          </h3>
-          <p>{result.reason}</p>
+          <p><b>{result.verdict}</b></p>
+          <p>{result.explanation}</p>
         </div>
       )}
     </div>

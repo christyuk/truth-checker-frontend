@@ -1,22 +1,15 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { useState } from "react";
 import Login from "./Login";
 import TruthCheck from "./TruthCheck";
-import ProtectedRoute from "./ProtectedRoute";
 
-export default function App() {
-  return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Login />} />
-        <Route
-          path="/check"
-          element={
-            <ProtectedRoute>
-              <TruthCheck />
-            </ProtectedRoute>
-          }
-        />
-      </Routes>
-    </BrowserRouter>
+function App() {
+  const [loggedIn, setLoggedIn] = useState(!!localStorage.getItem("token"));
+
+  return loggedIn ? (
+    <TruthCheck />
+  ) : (
+    <Login onLogin={() => setLoggedIn(true)} />
   );
 }
+
+export default App;
