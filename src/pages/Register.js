@@ -1,27 +1,46 @@
-router.post("/register", async (req, res) => {
-  try {
-    const { username, password } = req.body;
+import { useState } from "react";
+import API from "../api";
+import { useNavigate } from "react-router-dom";
 
-    if (!username || !password) {
-      return res.status(400).json({ message: "All fields required" });
+function Register() {
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const navigate = useNavigate();
+
+  const handleRegister = async () => {
+    try {
+      await API.post("/auth/register", {
+        username,
+        password,
+      });
+
+      alert("Registration successful. Please login.");
+      navigate("/login");
+    } catch (err) {
+      alert("Registration failed");
     }
+  };
 
-    const existingUser = await User.findOne({ username });
-    if (existingUser) {
-      return res.status(409).json({ message: "User already exists" });
-    }
+  return (
+    <div>
+      <h1>Register</h1>
 
-    const hashedPassword = await bcrypt.hash(password, 10);
+      <input
+        placeholder="Username"
+        value={username}
+        onChange={(e) => setUsername(e.target.value)}
+      />
 
-    await User.create({
-      username,
-      password: hashedPassword
-    });
+      <input
+        type="password"
+        placeholder="Password"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+      />
 
-    res.json({ message: "User registered successfully" });
+      <button onClick={handleRegister}>Register</button>
+    </div>
+  );
+}
 
-  } catch (error) {
-    console.error("Register error:", error);
-    res.status(500).json({ message: "Server error" });
-  }
-});
+export default Register;
