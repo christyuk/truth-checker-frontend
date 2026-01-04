@@ -10,11 +10,5 @@ export async function checkClaim(claim) {
     }
   );
 
-  const text = await response.text();
-
-  if (text.startsWith("<")) {
-    throw new Error("Still calling frontend instead of backend");
-  }
-
-  return JSON.parse(text);
+  return response.json();
 }
