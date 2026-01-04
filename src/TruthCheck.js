@@ -1,25 +1,41 @@
-import React, { useState } from "react";
-import API from "./api";
+import { useState } from "react";
 
-function TruthCheck() {
-  const [claim, setClaim] = useState("");
+export default function TruthCheck() {
+  const [text, setText] = useState("");
   const [result, setResult] = useState(null);
+  const [loading, setLoading] = useState(false);
 
-  const handleCheck = async () => {
+  const checkTruth = async () => {
+    if (!text.trim()) {
+      alert("Please enter a claim");
+      return;
+    }
+
+    setLoading(true);
+    setResult(null);
+
     try {
-      const res = await API.post(
-        "/api/truth/check",
-        { text: claim },
+      const response = await fetch(
+        "https://truth-checker-backend.onrender.com/api/truth/check",
         {
+          method: "POST",
           headers: {
-            "x-demo": "true", // ✅ DEMO MODE
+            "Content-Type": "application/json"
           },
+          body: JSON.stringify({ text })
         }
       );
 
-      setResult(res.data);
-    } catch (err) {
+      if (!response.ok) {
+        throw new Error("Backend error");
+      }
+
+      const data = await response.json();
+      setResult(data);
+    } catch (error) {
       alert("Backend not ready. Please try again.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -28,21 +44,22 @@ function TruthCheck() {
       <h1>AI Truth Checker</h1>
 
       <input
-        value={claim}
-        onChange={(e) => setClaim(e.target.value)}
+        type="text"
         placeholder="Enter claim"
+        value={text}
+        onChange={(e) => setText(e.target.value)}
       />
 
-      <button onClick={handleCheck}>Check</button>
+      <button onClick={checkTruth} disabled={loading}>
+        {loading ? "Checking..." : "Check"}
+      </button>
 
       {result && (
         <div>
-          <h3>{result.verdict}</h3>
+          <h2>{result.verdict}</h2>
           <p>{result.explanation}</p>
         </div>
       )}
     </div>
   );
 }
-
-export default TruthCheck;
