@@ -1,18 +1,48 @@
-import { useEffect } from "react";
+import { useState } from "react";
+import { login } from "./api";
+import { useNavigate } from "react-router-dom";
 
-function Login({ setIsAuthenticated }) {
-  useEffect(() => {
-    // AUTO DEMO LOGIN
-    const demoToken = "demo-jwt-token";
+function Login() {
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const navigate = useNavigate();
 
-    localStorage.setItem("token", demoToken);
-    setIsAuthenticated(true);
-  }, [setIsAuthenticated]);
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError("");
+
+    try {
+      const data = await login(username, password);
+      localStorage.setItem("token", data.token);
+      navigate("/check");
+    } catch (err) {
+      setError("Login failed");
+    }
+  };
 
   return (
-    <div style={{ padding: "20px" }}>
-      <h2>Demo Login</h2>
-      <p>Logging in automatically for demo purposes...</p>
+    <div>
+      <h1>Login</h1>
+
+      <form onSubmit={handleSubmit}>
+        <input
+          placeholder="username"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+        />
+
+        <input
+          type="password"
+          placeholder="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
+
+        <button type="submit">Login</button>
+      </form>
+
+      {error && <p style={{ color: "red" }}>{error}</p>}
     </div>
   );
 }

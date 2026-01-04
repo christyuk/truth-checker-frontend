@@ -1,16 +1,14 @@
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { HashRouter, Routes, Route, Navigate } from "react-router-dom";
 import Login from "./Login";
 import TruthCheck from "./TruthCheck";
 import ProtectedRoute from "./ProtectedRoute";
 
 function App() {
   return (
-    <BrowserRouter>
+    <HashRouter>
       <Routes>
-        {/* Login page */}
         <Route path="/" element={<Login />} />
 
-        {/* Protected truth checker */}
         <Route
           path="/check"
           element={
@@ -20,10 +18,9 @@ function App() {
           }
         />
 
-        {/* Fallback */}
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
-    </BrowserRouter>
+    </HashRouter>
   );
 }
 
