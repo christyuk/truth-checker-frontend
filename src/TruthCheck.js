@@ -4,23 +4,13 @@ import API from "../api";
 function TruthCheck() {
   const [claim, setClaim] = useState("");
   const [result, setResult] = useState("");
-  const [loading, setLoading] = useState(false);
 
   const checkTruth = async () => {
-    if (!claim.trim()) {
-      alert("Please enter a claim");
-      return;
-    }
-
     try {
-      setLoading(true);
       const res = await API.post("/check", { claim });
-      setResult(res.data.result || res.data.message);
+      setResult(res.data.result);
     } catch (err) {
-      console.error(err);
-      alert("Backend is waking up. Please try again in 30 seconds.");
-    } finally {
-      setLoading(false);
+      alert("Backend is waking up, please try again in 20 seconds");
     }
   };
 
@@ -30,7 +20,7 @@ function TruthCheck() {
 
       <textarea
         rows="4"
-        cols="50"
+        cols="40"
         value={claim}
         onChange={(e) => setClaim(e.target.value)}
         placeholder="Enter a claim"
@@ -38,17 +28,11 @@ function TruthCheck() {
 
       <br /><br />
 
-      <button onClick={checkTruth}>
-        {loading ? "Checking..." : "Check"}
-      </button>
+      <button onClick={checkTruth}>Check</button>
 
-      {result && (
-        <>
-          <br /><br />
-          <strong>Result:</strong>
-          <p>{result}</p>
-        </>
-      )}
+      <br /><br />
+
+      {result && <strong>Result: {result}</strong>}
     </div>
   );
 }
