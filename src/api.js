@@ -6,7 +6,6 @@ export const login = async (username, password) => {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ username, password }),
   });
-
   return res.json();
 };
 
@@ -16,6 +15,5 @@ export const checkClaim = async (claim) => {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ claim }),
   });
-
   return res.json();
 };
