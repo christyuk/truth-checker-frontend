@@ -1,37 +1,55 @@
-import { useState } from "react";
-import { checkTruth } from "./api";
+import { useEffect, useState } from "react";
+import { checkClaim } from "./api";
 
-export default function TruthCheck() {
+function TruthCheck() {
   const [claim, setClaim] = useState("");
   const [result, setResult] = useState(null);
+  const [loading, setLoading] = useState(false);
 
-  async function handleCheck() {
+  // Wake backend
+  useEffect(() => {
+    fetch("https://truth-checker-backend.onrender.com/health")
+      .catch(() => {});
+  }, []);
+
+  const handleCheck = async () => {
+    setLoading(true);
+    setResult(null);
+
     try {
-      const data = await checkTruth(claim);
+      const data = await checkClaim(claim);
       setResult(data);
     } catch (err) {
-      alert("Backend not ready. Please try again.");
+      setResult({
+        error: "Backend is running. Please wait 10–20 seconds and retry."
+      });
     }
-  }
+
+    setLoading(false);
+  };
 
   return (
-    <div>
-      <h1>AI Truth Checker</h1>
+    <div style={{ padding: "30px" }}>
+      <h2>AI Truth Checker</h2>
 
       <input
         value={claim}
         onChange={(e) => setClaim(e.target.value)}
-        placeholder="Enter claim"
+        placeholder="Enter a claim"
+        style={{ width: "300px", marginRight: "10px" }}
       />
 
-      <button onClick={handleCheck}>Check</button>
+      <button onClick={handleCheck} disabled={loading}>
+        {loading ? "Checking..." : "Check"}
+      </button>
 
       {result && (
-        <div style={{ marginTop: "20px" }}>
-          <h3>{result.verdict}</h3>
-          <p>{result.explanation}</p>
-        </div>
+        <pre style={{ marginTop: "20px" }}>
+          {JSON.stringify(result, null, 2)}
+        </pre>
       )}
     </div>
   );
 }
+
+export default TruthCheck;

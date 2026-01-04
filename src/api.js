@@ -1,7 +1,7 @@
-const API_BASE = "https://truth-checker-backend.onrender.com";
+const API_BASE_URL = "https://truth-checker-backend.onrender.com";
 
-export async function checkTruth(claim) {
-  const res = await fetch(`${API_BASE}/check`, {
+export async function checkClaim(claim) {
+  const response = await fetch(`${API_BASE_URL}/check`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json"
@@ -9,9 +9,10 @@ export async function checkTruth(claim) {
     body: JSON.stringify({ claim })
   });
 
-  if (!res.ok) {
-    throw new Error("Backend not ready");
+  if (!response.ok) {
+    const text = await response.text();
+    throw new Error(text || "Request failed");
   }
 
-  return res.json();
+  return response.json();
 }
