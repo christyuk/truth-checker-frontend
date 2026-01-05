@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { checkTruth } from "./api";
 
 function TruthCheck() {
@@ -22,10 +22,10 @@ function TruthCheck() {
       <button onClick={handleCheck}>Check</button>
 
       {result && (
-        <div>
-          <p><b>Result:</b> {result.result}</p>
+        <>
+          <h3>Result: {result.result}</h3>
           <p>{result.explanation}</p>
-        </div>
+        </>
       )}
     </div>
   );

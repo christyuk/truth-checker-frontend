@@ -1,29 +1,30 @@
-import axios from "axios";
-
-const API = axios.create({
-  baseURL: "https://YOUR-BACKEND.onrender.com",
-});
+const API_BASE = "https://truth-checker-backend.onrender.com";
 
 export const login = async (username, password) => {
-  const res = await API.post("/api/login", {
-    username,
-    password,
+  const res = await fetch(`${API_BASE}/api/login`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ username, password }),
   });
-  return res.data;
+
+  if (!res.ok) {
+    throw new Error("Login failed");
+  }
+
+  return res.json();
 };
 
-export const checkTruth = async (claim) => {
-  const token = localStorage.getItem("token");
+export const checkTruth = async (text) => {
+  const res = await fetch(`${API_BASE}/api/check`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+    },
+    body: JSON.stringify({ text }),
+  });
 
-  const res = await API.post(
-    "/api/check",
-    { claim },
-    {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    }
-  );
-
-  return res.data;
+  return res.json();
 };
