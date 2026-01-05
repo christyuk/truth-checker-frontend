@@ -16,7 +16,7 @@ function Login() {
       const data = await login(username, password);
       localStorage.setItem("token", data.token);
       navigate("/check");
-    } catch (err) {
+    } catch {
       setError("Login failed");
     }
   };
@@ -25,20 +25,22 @@ function Login() {
     <div>
       <h1>Login</h1>
 
+      <p><b>Demo Login</b></p>
+      <p>Username: test</p>
+      <p>Password: test123</p>
+
       <form onSubmit={handleSubmit}>
         <input
-          placeholder="username"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
+          placeholder="username"
         />
-
         <input
           type="password"
-          placeholder="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
+          placeholder="password"
         />
-
         <button type="submit">Login</button>
       </form>
 

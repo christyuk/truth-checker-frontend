@@ -1,38 +1,32 @@
-import React, { useState } from "react";
-import API from "../api";
+import { useState } from "react";
+import { checkTruth } from "./api";
 
 function TruthCheck() {
   const [claim, setClaim] = useState("");
-  const [result, setResult] = useState("");
+  const [result, setResult] = useState(null);
 
-  const checkTruth = async () => {
-    try {
-      const res = await API.post("/check", { claim });
-      setResult(res.data.result);
-    } catch (err) {
-      alert("Backend is waking up, please try again in 20 seconds");
-    }
+  const handleCheck = async () => {
+    const data = await checkTruth(claim);
+    setResult(data);
   };
 
   return (
-    <div style={{ padding: "40px" }}>
+    <div>
       <h1>Truth Checker</h1>
 
-      <textarea
-        rows="4"
-        cols="40"
+      <input
         value={claim}
         onChange={(e) => setClaim(e.target.value)}
         placeholder="Enter a claim"
       />
+      <button onClick={handleCheck}>Check</button>
 
-      <br /><br />
-
-      <button onClick={checkTruth}>Check</button>
-
-      <br /><br />
-
-      {result && <strong>Result: {result}</strong>}
+      {result && (
+        <div>
+          <p><b>Result:</b> {result.result}</p>
+          <p>{result.explanation}</p>
+        </div>
+      )}
     </div>
   );
 }
